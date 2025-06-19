@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type; X-UA-Compatible" content="text/html; charset=utf-8; charset=ISO-8859-1; IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
+
+    <title>Local Server</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+
+  </head>
+
+  <body>
+
+    <main class="container">
+    <h2>WRaihan's Audio Player Server</h2>
+
+    <ul id="folderList">
+      {% for folder in folders %}
+      <li><a href="/folder/{{ folder }}">{{ folder }}</a></li>
+      {% endfor %}
+    </ul>
+    </main>
+
+  </body>
+</html>
