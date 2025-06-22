@@ -34,28 +34,31 @@
 	<div class="songCard" data-index="{{ loop.index0 }}" data-src="/audio/{{ folder }}/{{ song }}" data-title="{{ song }}">
 	  <div style="display:flex;justify-content:space-between;align-items:center;">
 	    <strong>{{ song }}</strong>
-	    <span class="material-icons" style="color:blue;">play_arrow</span>
+	    <span class="material-icons" style="color:#90EE90;">play_arrow</span>
 	  </div>
 	</div>
 	{% endfor %}
       </div>
 
-      <div id="playerControls">
-	<button id="prevBtn" title="Previous" class="outline">
-	  <span class="material-icons iconFS">skip_previous</span>
-	</button>
-	<button id="nextBtn" title="Next" class="outline">
-	  <span class="material-icons iconFS">skip_next</span>
-	</button>
-	<button id="playbackModeToggle" title="Shuffle" class="outline">
-	  <span class="material-icons iconFS" id="playbackModeIcon">shuffle</span>
-	</button>
-      </div>
+      <div id="playerBar">
+	<div id="nowPlaying"></div>
 
-      <footer id="playerBar">
-	<div id="nowPlaying" style="font-weight:bold;font-size:1rem;margin: 0 0 .5rem 0;"></div>
-	<audio id="audioPlayer" controls style="width:100%;max-width:500px;"></audio>
-      </footer>
+	<div class="player-inline">
+	  <audio id="audioPlayer" controls></audio>
+
+	  <span class="player-buttons">
+	    <button id="prevBtn" title="Previous" class="outline">
+	      <span class="material-icons">skip_previous</span>
+	    </button>
+	    <button id="nextBtn" title="Next" class="outline">
+	      <span class="material-icons">skip_next</span>
+	    </button>
+	    <button id="playbackModeToggle" title="Shuffle" class="outline">
+	      <span class="material-icons" id="playbackModeIcon">shuffle</span>
+	    </button>
+	  </span>
+	</div>
+      </div>
 
     </main>
 

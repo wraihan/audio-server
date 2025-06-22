@@ -1,14 +1,13 @@
 main {
-  font-size: .75rem;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  font-size: .8rem;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: .65rem;
-  margin: .5rem 0 2rem 0; /* enough space so last row isn't covered */
+  margin: .5rem 0 12rem 0; /* enough space so last row isn't covered */
+  align-items: center;
 }
 
 /* On small screens (phones) */
@@ -29,12 +28,12 @@ main {
 }
 
 .songCard.active {
-  background-color: var(--primary-background, #dbeafe);
-  box-shadow: 0 0 0 2px var(--primary, #2563eb);
+  box-shadow: 0 0 0 3px;
+  background-color: #8B008B;
 }
 
 .songCard:hover {
-  background-color: var(--primary-background-color, #f0f0f0);
+  background-color: #8B008B;
 }
 
 #playerBar {
@@ -43,40 +42,38 @@ main {
   left: 0;
   right: 0;
   z-index: 999;
-  padding: .5rem 0 1rem 0;
   background: var(--card-background-color, #1a1a1a);
   border-top: 2px solid yellow;
   text-align: center;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  line-height: 2;
-  margin: 5rem 0 0 0;
+  line-height: 1.8rem;
+  padding: .35rem;
 /* Prevent mobile shrinkage issue */
   transform: translateZ(0);
-  will-change: transform;
+}
+
+#nowPlaying {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.player-inline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 #audioPlayer {
-  max-width: 200px;
+  width: 75%;
+  max-width: 400px;
   height: 20px; /* Shrink audio control */
 }
 
-#playerControls {
-  text-align: center;
-  color: #c1f41e;
-  margin: 4rem 0 6rem 0;
+.player-buttons button {
+  border: none;
+  cursor: pointer;
+  padding: .4rem 0 0 0;
 }
 
-#playerControls button {
-  padding: .3rem .2rem 0 .1rem;
-  margin: 0 .5rem 0 0;
-}
-
-.iconFS {
-  font-size: 1.75rem;
-}
-/* On small screens (phones) */
-@media (max-width: 600px) {
-  .iconFS {
-    font-size: 1.5rem;
-  }
-}

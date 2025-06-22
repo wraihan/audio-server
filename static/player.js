@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Diplay the Song's title
     function updateNowPlaying(name) {
-    nowPlaying.textContent = `🎵 Now Playing: ${name}`;
+    nowPlaying.textContent = `🎵 ${name}`;
   }
 
   function playSong(index) {
