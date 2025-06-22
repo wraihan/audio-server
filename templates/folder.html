@@ -24,18 +24,16 @@
     <main class="container">
 
       <section>
-	<a href="/">⬅️ Back to main dir</a><br>
+	<span class="material-icons">arrow_back_ios_new</span>&nbsp; <a href="/">Back to main dir</a>
       </section>
 
-      <h4>{{ folder }}</h4>
+      <h3 style="text-align:center">{{ folder }}</h3>
 
       <div id="songGrid" class="grid">
 	{% for song in songs %}
 	<div class="songCard" data-index="{{ loop.index0 }}" data-src="/audio/{{ folder }}/{{ song }}" data-title="{{ song }}">
-	  <div style="display:flex;justify-content:space-between;align-items:center;">
-	    <strong>{{ song }}</strong>
-	    <span class="material-icons" style="color:#90EE90;">play_arrow</span>
-	  </div>
+	  <span class="filename">{{ song }}</span>
+	  <span class="material-icons" style="color:#90EE90;">play_arrow</span>
 	</div>
 	{% endfor %}
       </div>
