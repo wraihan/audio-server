@@ -7,65 +7,48 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = -1;
 
   // Get elements
-  const shuffleBtn = document.getElementById("shuffleToggle");
-  const repeatBtn = document.getElementById("repeatToggle");
+  const playbackModeBtn = document.getElementById("playbackModeToggle");
+  const playbackIcon = document.getElementById("playbackModeIcon");
 
   // Load saved settings
-  let repeatMode = localStorage.getItem("repeatMode") || "off";
-  let isShuffle = localStorage.getItem("isShuffle") === "true";
+  let playbackMode = localStorage.getItem("playbackMode") || "shuffle";
+  updatePlaybackIcon(playbackMode);
 
-  // Restore Shuffle
-  const shuffleIcon = document.getElementById("shuffleIcon");
-  shuffleIcon.textContent = "shuffle";
-  shuffleIcon.style.opacity = isShuffle ? "1" : "0.3";
-  shuffleBtn.title = `Shuffle ${isShuffle ? "On" : "Off"}`;
-
-  // Restore Repeat
-  const repeatIcon = document.getElementById("repeatIcon");
-
-  if (repeatMode === "list") {
-    repeatIcon.textContent = "repeat";
-    repeatBtn.title = "Repeat List";
-    repeatIcon.style.opacity = "1";
-  } else if (repeatMode === "one") {
-    repeatIcon.textContent = "repeat_one";
-    repeatBtn.title = "Repeat One";
-    repeatIcon.style.opacity = "1";
-  } else {
-    repeatIcon.textContent = "repeat";
-    repeatBtn.title = "Repeat Off";
-    repeatIcon.style.opacity = "0.3";
-  }
-  
-  // Shuffle button toggle
-  shuffleBtn.addEventListener("click", () => {
-    isShuffle = !isShuffle;
-    const icon = document.getElementById("shuffleIcon");
-    icon.textContent = isShuffle ? "shuffle" : "shuffle"; // same icon
-    shuffleBtn.title = `Shuffle ${isShuffle ? "On" : "Off"}`;
-    icon.style.opacity = isShuffle ? "1" : "0.3";
-    localStorage.setItem("isShuffle", isShuffle);
-  });
-
-  // Repeat button toggle (off → list → one → off)
-  repeatBtn.addEventListener("click", () => {
-    const icon = document.getElementById("repeatIcon");
-    if (repeatMode === "off") {
-      repeatMode = "list";
-      icon.textContent = "repeat";
-      repeatBtn.title = "Repeat List";
-    } else if (repeatMode === "list") {
-      repeatMode = "one";
-      icon.textContent = "repeat_one";
-      repeatBtn.title = "Repeat One";
+  // Toggle through 4 playing modes 
+  playbackModeBtn.addEventListener("click", () => {
+    if (playbackMode === "shuffle") {
+      playbackMode = "repeatOne";
+    } else if (playbackMode === "repeatOne") {
+      playbackMode ="repeatList";
+    } else if (playbackMode === "repeatList") {
+      playbackMode = "off";
     } else {
-      repeatMode = "off";
-      icon.textContent = "repeat";
-      repeatBtn.title = "Repeat Off";
+      playbackMode = "shuffle";
     }
-    icon.style.opacity = repeatMode === "off" ? "0.3" : "1";
-    localStorage.setItem("repeatMode", repeatMode);
+
+    updatePlaybackIcon(playbackMode);
+    localStorage.setItem("playbackMode", playbackMode);
   });
+
+  function updatePlaybackIcon(mode) {
+    if (mode === "shuffle") {
+      playbackIcon.textContent = "shuffle";
+      playbackModeBtn.title = "Shuffle";
+      playbackIcon.style.opacity = 1;
+    } else if (mode === "repeatOne") {
+      playbackIcon.textContent = "repeat_one";
+      playbackModeBtn.title = "Repeat One";
+      playbackIcon.style.opacity = 1;
+    } else if (mode === "repeatList") {
+      playbackIcon.textContent = "repeat";
+      playbackModeBtn.title = "Repeat List";
+      playbackIcon.style.opacity = 1;
+    } else {
+      playbackIcon.textContent = "repeat";
+      playbackModeBtn.title = "Playback Off";
+      playbackIcon.style.opacity = 0.3;
+    }
+  }
 
   // Resume last song function
   const savedIndex = parseInt(localStorage.getItem("lastPlayedIndex"), 10);
@@ -120,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("nextBtn").addEventListener("click", () => {
-    if (isShuffle) {
+    if (playbackMode === "shuffle") {
       playRandomSong();
     } else {
       const next = (currentIndex + 1) % songCards.length;
@@ -130,14 +113,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // When song ends
   audio.addEventListener("ended", () => {
-    if (isShuffle) {
+    if (playbackMode === "shuffle") {
       playRandomSong();
-    } else if (repeatMode === "list") {
+    } else if (playbackMode === "repeatList") {
       const next = (currentIndex + 1) % songCards.length;
       playSong(next);
-    } else if (repeatMode === "one") {
+    } else if (playbackMode === "repeatOne") {
       playSong(currentIndex);
     }
+    // If playbackMode is "off", do nothing — song ends
   });
 
   function playRandomSong() {
