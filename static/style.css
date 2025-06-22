@@ -33,6 +33,10 @@ main {
   box-shadow: 0 0 0 2px var(--primary, #2563eb);
 }
 
+.songCard:hover {
+  background-color: var(--primary-background-color, #f0f0f0);
+}
+
 #playerBar {
   position: fixed;
   bottom: 0;
