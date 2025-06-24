@@ -4,35 +4,88 @@
 */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const songCards = Array.from(document.querySelectorAll(".songCard"));
-  let currentIndex = -1;
 
-  // Get elements
+  // ================================
+  // 1. Get Elements
+  // ================================
+  const audio = document.getElementById("audioPlayer");
+  const songCards = Array.from(document.querySelectorAll(".songCard"));
   const playerBar = document.getElementById("playerBar");
   const nowPlaying = document.getElementById("nowPlaying");
-  const audio = document.getElementById("audioPlayer");
   const playbackModeBtn = document.getElementById("playbackModeToggle");
   const playbackIcon = document.getElementById("playbackModeIcon");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
-  // Load saved settings
+  // ================================
+  // 2. Global State
+  // ================================
+  let currentIndex = -1;
   let playbackMode = localStorage.getItem("playbackMode") || "shuffle";
+
+  // ================================
+  // 3. Apply Saved Settings
+  // ================================
   updatePlaybackIcon(playbackMode);
 
-  // Toggle through 4 playing modes 
-  playbackModeBtn.addEventListener("click", () => {
-    if (playbackMode === "shuffle") {
-      playbackMode = "repeatOne";
-    } else if (playbackMode === "repeatOne") {
-      playbackMode ="repeatList";
-    } else if (playbackMode === "repeatList") {
-      playbackMode = "off";
-    } else {
-      playbackMode = "shuffle";
+  // Restore saved volume (0.0 to 1.0)
+  const savedVolume = parseFloat(localStorage.getItem("volume"));
+  if (!isNaN(savedVolume)) {
+    audio.volume = savedVolume;
+  }
+
+  // Restore playback position if available
+  const savedTime = parseFloat(localStorage.getItem("lastPlaybackTime"));
+  if (!isNaN(savedTime)) {
+    audio.currentTime = savedTime;
+  }
+
+  // Resume last song function
+  const savedIndex = parseInt(localStorage.getItem("lastPlayedIndex"), 10);
+  if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < songCards.length) {
+    const card = songCards[savedIndex];
+    audio.src = card.dataset.src;
+    updateNowPlaying(card.dataset.title); // ✅ use clean title
+    playerBar.style.display = "block";
+    currentIndex = savedIndex;
+  }
+
+  // ================================
+  // 4. Helper Functions
+  // ================================
+  // Diplay the Song's title
+  function updateNowPlaying(name) {
+    nowPlaying.textContent = `🎵 ${name}`;
+  }
+
+  function playSong(index) {
+    if (index >= 0 && index < songCards.length) {
+      const card = songCards[index];
+      audio.src = card.dataset.src;
+      updateNowPlaying(card.dataset.title);
+      playerBar.style.display = "block";
+      audio.play();
+      currentIndex = index;
+      localStorage.setItem("lastPlayedIndex", index);
     }
 
-    updatePlaybackIcon(playbackMode);
-    localStorage.setItem("playbackMode", playbackMode);
-  });
+    // Remove active class from all
+    document.querySelectorAll(".songCard").forEach(card => card.classList.remove("active"));
+
+    // Add active class to currently playing card
+    const activeCard = document.querySelector(`.songCard[data-index="${index}"]`);
+    if (activeCard) {
+      activeCard.classList.add("active");
+    }
+  }
+
+  function playRandomSong() {
+    let nextIndex;
+    do {
+      nextIndex = Math.floor(Math.random() * songCards.length);
+    } while (nextIndex === currentIndex && songCards.length > 1);
+    playSong(nextIndex);
+  }
 
   function updatePlaybackIcon(mode) {
     if (mode === "shuffle") {
@@ -54,45 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Resume last song function
-  const savedIndex = parseInt(localStorage.getItem("lastPlayedIndex"), 10);
-
-  if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < songCards.length) {
-    const card = songCards[savedIndex];
-    const title = card.dataset.title;
-    audio.src = card.dataset.src;
-    updateNowPlaying(card.dataset.title); // ✅ use clean title
-    playerBar.style.display = "block";
-    currentIndex = savedIndex;
-  }
-
-  // Diplay the Song's title
-    function updateNowPlaying(name) {
-    nowPlaying.textContent = `🎵 ${name}`;
-  }
-
-  function playSong(index) {
-    if (index >= 0 && index < songCards.length) {
-      const card = songCards[index];
-      const title = card.dataset.title;
-      audio.src = card.dataset.src;
-      updateNowPlaying(title);
-      playerBar.style.display = "block";
-      audio.play();
-      currentIndex = index;
-      localStorage.setItem("lastPlayedIndex", index);
-    }
-
-    // Remove active class from all
-    document.querySelectorAll(".songCard").forEach(card => card.classList.remove("active"));
-
-    // Add active class to currently playing card
-    const activeCard = document.querySelector(`.songCard[data-index="${index}"]`);
-    if (activeCard) {
-      activeCard.classList.add("active");
-    }
-  }
-
+  // ================================
+  // 5. Event Listeners
+  // ================================
   // Hook up all song buttons
   songCards.forEach((card, index) => {
     card.addEventListener("click", () => {
@@ -100,13 +117,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-   // Prev & Next buttons
-  document.getElementById("prevBtn").addEventListener("click", () => {
+  // Toggle through 4 playing modes 
+  playbackModeBtn.addEventListener("click", () => {
+    if (playbackMode === "shuffle") {
+      playbackMode = "repeatOne";
+    } else if (playbackMode === "repeatOne") {
+      playbackMode ="repeatList";
+    } else if (playbackMode === "repeatList") {
+      playbackMode = "off";
+    } else {
+      playbackMode = "shuffle";
+    }
+
+    updatePlaybackIcon(playbackMode);
+    localStorage.setItem("playbackMode", playbackMode);
+  });
+
+  // Prev & Next buttons
+  prevBtn.addEventListener("click", () => {
     const prev = (currentIndex - 1 + songCards.length) % songCards.length;
     playSong(prev);
   });
 
-  document.getElementById("nextBtn").addEventListener("click", () => {
+  nextBtn.addEventListener("click", () => {
     if (playbackMode === "shuffle") {
       playRandomSong();
     } else {
@@ -125,33 +158,12 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (playbackMode === "repeatOne") {
       playSong(currentIndex);
     }
-    // If playbackMode is "off", do nothing — song ends
   });
-
-  function playRandomSong() {
-    let nextIndex;
-    do {
-      nextIndex = Math.floor(Math.random() * songCards.length);
-    } while (nextIndex === currentIndex && songCards.length > 1);
-    playSong(nextIndex);
-  }
-
-  // Restore saved volume (0.0 to 1.0)
-  const savedVolume = parseFloat(localStorage.getItem("volume"));
-  if (!isNaN(savedVolume)) {
-    audio.volume = savedVolume;
-  }
 
   // Save volume whenever it changes
   audio.addEventListener("volumechange", () => {
     localStorage.setItem("volume", audio.volume);
   });
-
-  // Restore playback position if available
-  const savedTime = parseFloat(localStorage.getItem("lastPlaybackTime"));
-  if (!isNaN(savedTime)) {
-    audio.currentTime = savedTime;
-  }
 
   // Update saved time every few seconds
   setInterval(() => {
