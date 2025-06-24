@@ -1,12 +1,16 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const audio = document.getElementById("audioPlayer");
-  const playerBar = document.getElementById("playerBar");
-  const nowPlaying = document.getElementById("nowPlaying");
+/*!
+ * Copyright 2025 Pn Wan Raihan, (https://wraihan.com)
+ * Licensed under MIT (https://wraihanws.mit-license.org/)
+*/
 
+document.addEventListener("DOMContentLoaded", () => {
   const songCards = Array.from(document.querySelectorAll(".songCard"));
   let currentIndex = -1;
 
   // Get elements
+  const playerBar = document.getElementById("playerBar");
+  const nowPlaying = document.getElementById("nowPlaying");
+  const audio = document.getElementById("audioPlayer");
   const playbackModeBtn = document.getElementById("playbackModeToggle");
   const playbackIcon = document.getElementById("playbackModeIcon");
 
@@ -96,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-   // Prev/Next buttons
+   // Prev & Next buttons
   document.getElementById("prevBtn").addEventListener("click", () => {
     const prev = (currentIndex - 1 + songCards.length) % songCards.length;
     playSong(prev);
@@ -158,3 +162,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   localStorage.setItem("lastPlaybackTime", 0);
 });
+
