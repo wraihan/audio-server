@@ -176,6 +176,39 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("volume", audio.volume);
   });
 
+  document.addEventListener("keydown", (event) => {
+    const tag = event.target.tagName;
+    const isTyping = tag === "INPUT" || tag === "TEXTAREA" || event.target.isContentEditable;
+  
+    if (isTyping) return;
+
+    switch (event.code) {
+      case "Space": // Spacebar function as play/pause toggle.
+	event.preventDefault();
+	if (audio.paused) {
+	  audio.play();
+	} else {
+	  audio.pause();
+	}
+	break;
+    
+      case "ArrowRight":
+	event.preventDefault();
+	audio.currentTime += 5; // ⏩ Seek forward 5 seconds
+	break;
+
+      case "ArrowLeft":
+	event.preventDefault();
+	audio.currentTime = Math.max(0, audio.currentTime - 5); // ⏪ Seek back 5 seconds
+	break;
+
+      case "KeyM":
+	event.preventDefault();
+	audio.muted = !audio.muted;
+	break;
+    }
+  });
+
   // Save playback playback position every second. 
   setInterval(() => {
     if (!audio.paused && !audio.ended) {
