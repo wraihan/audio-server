@@ -112,6 +112,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Tooltip for changes made by keys' press
+  function showFeedback(message) {
+    const overlay = document.getElementById("feedbackOverlay");
+    overlay.textContent = message;
+    overlay.style.display = "block";
+    overlay.style.opacity = 1;
+
+    setTimeout(() => {
+      overlay.style.opacity = 0;
+      setTimeout(() => {
+	overlay.style.display = "none";
+      }, 300);
+    }, 1000);
+  }
+
   // ================================
   // 5. Event Listeners
   // ================================
@@ -205,6 +220,36 @@ document.addEventListener("DOMContentLoaded", () => {
       case "KeyM":
 	event.preventDefault();
 	audio.muted = !audio.muted;
+	break;
+    
+      case "ArrowUp":
+	event.preventDefault();
+	audio.volume = Math.min(1, audio.volume + 0.05); // Increase volume
+	localStorage.setItem("volume", audio.volume); // Save new volume
+	showFeedback(`🔊 Volume: ${(audio.volume * 100).toFixed(0)}%`);
+	break;
+
+      case "ArrowDown":
+	event.preventDefault();
+	audio.volume = Math.max(0, audio.volume - 0.05); // Decrease volume
+	localStorage.setItem("volume", audio.volume); // Save new volume
+	showFeedback(`🔉 Volume: ${(audio.volume * 100).toFixed(0)}%`);
+	break;
+
+      case "KeyP":
+	event.preventDefault();
+	playbackModeBtn.click(); // Cycle playback modes
+	showFeedback(`Mode: ${playbackModeBtn.title}`);
+	break;
+
+      case "KeyJ": // Previous song
+	event.preventDefault();
+	prevBtn.click();
+	break;
+
+      case "KeyL": // Next song
+	event.preventDefault();
+	nextBtn.click();
 	break;
     }
   });
