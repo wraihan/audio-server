@@ -4,14 +4,13 @@
 */
 
 document.addEventListener("DOMContentLoaded", () => {
-
   // ================================
   // 1. Get Elements
   // ================================
   const audio = document.getElementById("audioPlayer");
-  const songCards = Array.from(document.querySelectorAll(".songCard"));
   const playerBar = document.getElementById("playerBar");
   const nowPlaying = document.getElementById("nowPlaying");
+  const songCards = Array.from(document.querySelectorAll(".songCard"));
   const playbackModeBtn = document.getElementById("playbackModeToggle");
   const playbackIcon = document.getElementById("playbackModeIcon");
   const prevBtn = document.getElementById("prevBtn");
@@ -26,26 +25,29 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================================
   // 3. Apply Saved Settings
   // ================================
+  // Playback icon restoration.
   updatePlaybackIcon(playbackMode);
 
-  // Restore saved volume (0.0 to 1.0)
+  // Volume restoration (prevents slider from resetting on refresh).
   const savedVolume = parseFloat(localStorage.getItem("volume"));
   if (!isNaN(savedVolume)) {
-    audio.volume = savedVolume;
+    setTimeout(() => {
+      audio.volume = savedVolume;
+    }, 100); // or 0 for next tick
   }
 
-  // Restore playback position if available
+  // Restore last playback position (resume where left off).
   const savedTime = parseFloat(localStorage.getItem("lastPlaybackTime"));
   if (!isNaN(savedTime)) {
     audio.currentTime = savedTime;
   }
 
-  // Resume last song function
+  // Restore the last played song (if any).
   const savedIndex = parseInt(localStorage.getItem("lastPlayedIndex"), 10);
   if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < songCards.length) {
     const card = songCards[savedIndex];
     audio.src = card.dataset.src;
-    updateNowPlaying(card.dataset.title); // ✅ use clean title
+    updateNowPlaying(card.dataset.title);
     playerBar.style.display = "block";
     currentIndex = savedIndex;
   }
@@ -53,11 +55,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================================
   // 4. Helper Functions
   // ================================
-  // Diplay the Song's title
+  // Display the title of the current song.
   function updateNowPlaying(name) {
     nowPlaying.textContent = `🎵 ${name}`;
   }
 
+  // Play a song by index (and set it as active).
   function playSong(index) {
     if (index >= 0 && index < songCards.length) {
       const card = songCards[index];
@@ -66,27 +69,29 @@ document.addEventListener("DOMContentLoaded", () => {
       playerBar.style.display = "block";
       audio.play();
       currentIndex = index;
+      // Save the index to localStorage.
       localStorage.setItem("lastPlayedIndex", index);
     }
-
-    // Remove active class from all
+  
+    // Highlight the active card.
     document.querySelectorAll(".songCard").forEach(card => card.classList.remove("active"));
-
-    // Add active class to currently playing card
     const activeCard = document.querySelector(`.songCard[data-index="${index}"]`);
     if (activeCard) {
       activeCard.classList.add("active");
     }
   }
 
+  // Play a new random song using Math.random().
   function playRandomSong() {
     let nextIndex;
     do {
       nextIndex = Math.floor(Math.random() * songCards.length);
     } while (nextIndex === currentIndex && songCards.length > 1);
+
     playSong(nextIndex);
   }
 
+  // Update the icon, tooltip, and opacity based on mode.
   function updatePlaybackIcon(mode) {
     if (mode === "shuffle") {
       playbackIcon.textContent = "shuffle";
@@ -110,35 +115,41 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================================
   // 5. Event Listeners
   // ================================
-  // Hook up all song buttons
+  // Song card acts as a clickable button.
   songCards.forEach((card, index) => {
     card.addEventListener("click", () => {
       playSong(index);
     });
   });
 
-  // Toggle through 4 playing modes 
+  // Handle playback mode change (cycle through 4 modes).
   playbackModeBtn.addEventListener("click", () => {
     if (playbackMode === "shuffle") {
       playbackMode = "repeatOne";
     } else if (playbackMode === "repeatOne") {
-      playbackMode ="repeatList";
+      playbackMode = "repeatList";
     } else if (playbackMode === "repeatList") {
       playbackMode = "off";
     } else {
       playbackMode = "shuffle";
     }
 
+    // Save the new mode.
     updatePlaybackIcon(playbackMode);
     localStorage.setItem("playbackMode", playbackMode);
   });
 
-  // Prev & Next buttons
+  // Previous button: behavior changes depending on mode. 
   prevBtn.addEventListener("click", () => {
-    const prev = (currentIndex - 1 + songCards.length) % songCards.length;
-    playSong(prev);
+    if (playbackMode === "shuffle") {
+      playRandomSong();
+    } else {
+      const prev = (currentIndex - 1 + songCards.length) % songCards.length;
+      playSong(prev);
+    }
   });
 
+  // Next button: shuffle or ordered playback. 
   nextBtn.addEventListener("click", () => {
     if (playbackMode === "shuffle") {
       playRandomSong();
@@ -148,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // When song ends
+  // Audio behavior after song ends, based on mode.
   audio.addEventListener("ended", () => {
     if (playbackMode === "shuffle") {
       playRandomSong();
@@ -160,12 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Save volume whenever it changes
+  // Save volume when it changes.
   audio.addEventListener("volumechange", () => {
     localStorage.setItem("volume", audio.volume);
   });
 
-  // Update saved time every few seconds
+  // Save playback playback position every second. 
   setInterval(() => {
     if (!audio.paused && !audio.ended) {
       localStorage.setItem("lastPlaybackTime", audio.currentTime);
@@ -174,4 +185,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   localStorage.setItem("lastPlaybackTime", 0);
 });
-
