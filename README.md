@@ -1,5 +1,47 @@
 # Raihan's local audio server
 
-**The `player.js` script has been updated to consolidate all playback modes (shuffle, repeat one, repeat all, and playback off) under a single toggle button instead.**
-
 ![Tangkap Layar](desktop-and-mobile-view.jpg)
+
+**The `player.js` script has been updated to consolidate all playback modes (shuffle, repeat one, repeat all, and playback off) under a single toggle button instead.**
+# Raihan's Local Audio Server
+
+This is a self-hosted audio server built using **Flask** and **Gunicorn**, designed to serve audio files locally within a home or development environment.
+
+The server is reverse-proxied through **Nginx** and supports HTTPS via locally trusted certificates generated with [`mkcert`](https://github.com/FiloSottile/mkcert). It runs under the subdomain `audio.wraihan.loc` and is ideal for private use in LAN or offline setups.
+
+Audio files are organized in directories and accessible via a web-based interface with built-in playback controls.
+
+## Features
+
+- Simple and responsive UI with dark mode support
+- Organized folder structure for audio files (e.g. `Al-Quran_Al-Afasy/`)
+- Playback with **play/pause**, **next**, **previous**, and **seek** controls
+- Single toggle button cycling through playback modes:
+  - Shuffle
+  - Repeat One
+  - Repeat All
+  - Playback Off
+- Proxy-ready for local domains and HTTPS via `nginx`
+- Python project directory can be placed freely (e.g. in `$HOME`)
+
+> 💡 This project is designed as a subdomain-based Python application that complements a local Apache+Nginx reverse proxy setup. Refer to my [blog post](https://wraihan.com/posts/nginx-sebagai-proksi-songsang-untuk-pelayan-apache/) for full configuration steps.
+
+## Requirements
+
+- Python 3.10+
+- Flask
+- Gunicorn
+- Nginx (for reverse proxy)
+- mkcert (for HTTPS in local dev)
+
+## Getting Started
+
+1. Clone this repository
+1. Set up your Python virtual environment
+1. Run the server with Gunicorn:
+   ```bash
+   gunicorn --bind 127.0.0.1:5000 server:app
+   ```
+1. Ensure Nginx is configured to proxy your own domain to 127.0.0.1:5000
+1. Visit https://your-domain/ in your browser
+
