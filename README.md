@@ -1,9 +1,6 @@
-# Raihan's local audio server
+# Raihan's Local Audio Server
 
 ![Tangkap Layar](desktop-and-mobile-view.jpg)
-
-**The `player.js` script has been updated to consolidate all playback modes (shuffle, repeat one, repeat all, and playback off) under a single toggle button instead.**
-# Raihan's Local Audio Server
 
 This is a self-hosted audio server built using **Flask** and **Gunicorn**, designed to serve audio files locally within a home or development environment.
 
