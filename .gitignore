@@ -1,5 +1,5 @@
 # Ignore ALL files & subdirectories in /audio
-audio/**
+media/**
 
 # Keep the directory structure by tracking .gitkeep
-!audio/.gitkeep
+!media/.gitkeep

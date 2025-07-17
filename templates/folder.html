@@ -9,7 +9,7 @@
     <!-- CSS -->
     <link href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
-    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
 
     <!-- JS -->
     <script>
@@ -31,7 +31,7 @@
 
       <div id="songGrid" class="grid">
 	{% for song in songs %}
-	<div class="songCard" data-index="{{ loop.index0 }}" data-src="/audio/{{ folder }}/{{ song }}" data-title="{{ song }}">
+	<div class="songCard" data-index="{{ loop.index0 }}" data-src="/media/{{ folder }}/{{ song }}" data-title="{{ song }}">
 	  <span class="filename">{{ song }}</span>
 	  <span class="material-icons" style="color:#90EE90;">play_arrow</span>
 	</div>
@@ -42,7 +42,9 @@
 	<div id="nowPlaying"></div>
 
 	<div class="player-inline">
-	  <audio id="audioPlayer" controls></audio>
+	  <audio id="audioPlayer" controls>
+	    <source src="/media/{{ folder }}/{{ song }}" type="audio/mpeg">
+	  </audio>
 
 	  <span class="player-buttons">
 	    <button id="prevBtn" title="Previous" class="outline">
