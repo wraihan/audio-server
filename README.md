@@ -21,7 +21,7 @@ Audio files are organized in directories and accessible via a web-based interfac
 - Proxy-ready for local domains via `nginx`
 - Python project directory can be placed freely (e.g. in `$HOME`)
 
-> 💡 This project is designed as a domain-based Python application that complements a local Apache+Nginx reverse proxy setup. Refer to my entitled "[Nginx sebagai Proksi Songsang untuk Pelbagai Backend](https://wraihan.com/posts/nginx-proksi-songsang-pelbagai-backend/)" for full configuration steps.
+> 💡 This project is designed as a domain-based Python application that complements multiple backends+Nginx reverse proxy setup. Refer to my blog post entitled "[Nginx sebagai Proksi Songsang untuk Pelbagai Backend](https://wraihan.com/posts/nginx-proksi-songsang-pelbagai-backend/)" for full configuration steps.
 
 ## Requirements
 
