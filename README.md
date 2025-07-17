@@ -4,7 +4,7 @@
 
 This is a self-hosted audio server built using **Flask** and **Gunicorn**, designed to serve audio files locally within a home or development environment.
 
-The server is reverse-proxied through **Nginx** and supports HTTPS via locally trusted certificates generated with [`mkcert`](https://github.com/FiloSottile/mkcert). It runs under the subdomain `audio.wraihan.loc` and is ideal for private use in LAN or offline setups.
+The server is reverse-proxied through **Nginx**. It runs under the domain `audio.wraihan.loc` and is ideal for private use in LAN or offline setups.
 
 Audio files are organized in directories and accessible via a web-based interface with built-in playback controls.
 
@@ -18,10 +18,10 @@ Audio files are organized in directories and accessible via a web-based interfac
   - Repeat One
   - Repeat All
   - Playback Off
-- Proxy-ready for local domains and HTTPS via `nginx`
+- Proxy-ready for local domains via `nginx`
 - Python project directory can be placed freely (e.g. in `$HOME`)
 
-> 💡 This project is designed as a subdomain-based Python application that complements a local Apache+Nginx reverse proxy setup. Refer to my [blog post](https://wraihan.com/posts/nginx-sebagai-proksi-songsang-untuk-pelayan-apache/) for full configuration steps.
+> 💡 This project is designed as a domain-based Python application that complements a local Apache+Nginx reverse proxy setup. Refer to my entitled "[Nginx sebagai Proksi Songsang untuk Pelbagai Backend](https://wraihan.com/posts/nginx-proksi-songsang-pelbagai-backend/)" for full configuration steps.
 
 ## Requirements
 
@@ -29,7 +29,6 @@ Audio files are organized in directories and accessible via a web-based interfac
 - Flask
 - Gunicorn
 - Nginx (for reverse proxy)
-- mkcert (for HTTPS in local dev)
 
 ## Getting Started
 
@@ -40,5 +39,5 @@ Audio files are organized in directories and accessible via a web-based interfac
    gunicorn --bind 127.0.0.1:5000 server:app
    ```
 1. Ensure Nginx is configured to proxy your own domain to 127.0.0.1:5000
-1. Visit https://your-domain/ in your browser
+1. Visit http://your-domain/ in your browser
 
