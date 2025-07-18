@@ -4,7 +4,7 @@
 
 This is a self-hosted audio server built using **Flask** and **Gunicorn**, designed to serve audio files locally within a home or development environment.
 
-The server is reverse-proxied through **Nginx**. It runs under the domain `audio.wraihan.loc` and is ideal for private use in LAN or offline setups.
+The server is reverse-proxied through **Nginx**. It runs under the domain `audio.loc` and is ideal for private use in LAN or offline setups.
 
 Audio files are organized in directories and accessible via a web-based interface with built-in playback controls.
 
