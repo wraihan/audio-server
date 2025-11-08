@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template, url_for, send_from_directory
 
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -18,6 +17,9 @@ def show_folder(folder):
     songs = sorted([f for f in os.listdir(folder_path) if f.endswith('.mp3')])
     return render_template('folder.html', folder=folder, songs=songs)
 
+@app.route('/media/<path:filename>')
+def serve_media(filename):
+    return send_from_directory('media', filename)
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=5000, debug=True)

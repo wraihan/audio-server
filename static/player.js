@@ -47,8 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < songCards.length) {
     const card = songCards[savedIndex];
     audio.src = card.dataset.src;
+    audio.load();
     updateNowPlaying(card.dataset.title);
     playerBar.style.display = "block";
+    audio.play().catch(err => console.log("Play error:", err));
     currentIndex = savedIndex;
   }
 
